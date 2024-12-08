@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Однорукий бандит</title>
+    <link rel="icon" href="image/apple-icon.ico">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Freeman&family=Great+Vibes&family=Lacquer&family=Lora:ital,wght@0,400..700;1,400..700&family=Rubik+Bubbles&family=Rubik+Mono+One&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+			background-image: url("image/fon2.jpg");			
+        }
+		 #back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0066cc;
+            color: #fff;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #back-button:hover {
+            background-color: #004999;
+        }
+        h1 {
+			font-size: 36px;
+            color: #de0d3e;
+			font-family: "Rubik Mono One", monospace;
+        }
+        .slot-machine {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .reel {
+            width: 100px;
+            height: 100px;
+            border: 3px solid #b3ad42;
+            margin: 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 42px;
+            background-color: #fff;
+            border-radius: 10px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .winning-row {
+            border-color: green;
+            transform: scale(1.1);
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+			font-weight: bold;
+        }
+        #username-display {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+		#player-name
+		{
+			font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+		}
+    </style>
+</head>
+<body>
+	<a id="back-button" href="../index.html">Назад</a>
+    <h1>Однорукий бандит</h1>
+	<p id="player-name">Гравець:</p>
+    <div id="username-display" style="display: none;"></div>
+
+    <div class="slot-machine" id="slot-machine" style="display: none;">
+        <div class="row" id="row1">
+            <div class="reel">🍎</div>
+            <div class="reel">🍒</div>
+            <div class="reel">🍋</div>
+        </div>
+        <div class="row" id="row2">
+            <div class="reel">🍒</div>
+            <div class="reel">🍐</div>
+            <div class="reel">🍑</div>
+        </div>
+        <div class="row" id="row3">
+            <div class="reel">🍑</div>
+            <div class="reel">🍋</div>
+            <div class="reel">🍎</div>
+        </div>
+    </div>
+    <button class="button" id="generate" style="display: none;">Обертати</button>
+    <p class="message" id="message"></p>
+
+    <script>
+    const fruits = ['🍎', '🍒', '🍋', '🍐', '🍑'];
+    const maxTries = 3;
+    let currentTry = 0;
+    let username = "";
+
+    const usernameDisplay = document.getElementById('username-display');
+    const generateButton = document.getElementById('generate');
+    const slotMachine = document.getElementById('slot-machine');
+    const message = document.getElementById('message');
+
+    const rows = [
+        document.getElementById('row1'),
+        document.getElementById('row2'),
+        document.getElementById('row3')
+    ];
+
+    window.onload = () => {
+        while (!username || username.trim() === '') {
+            username = prompt('Введіть ваше ім\'я:').trim();
+        }
+        if (!username) {
+            username = 'Гравець'; 
+        }
+        usernameDisplay.textContent = username;
+        usernameDisplay.style.display = 'block';
+        slotMachine.style.display = 'flex';
+        generateButton.style.display = 'inline-block';
+        message.textContent = `Удачі!`;
+    };
+
+    generateButton.addEventListener('click', () => {
+        currentTry++;
+
+        rows.forEach(row => row.classList.remove('winning-row'));
+
+        rows.forEach(row => {
+            Array.from(row.children).forEach(reel => {
+                const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
+                reel.textContent = randomFruit;
+            });
+        });
+
+        const winningRows = rows.filter(row => {
+            const [r1, r2, r3] = Array.from(row.children).map(reel => reel.textContent);
+            return r1 === r2 && r2 === r3;
+        });
+
+        if (winningRows.length > 0) {
+            winningRows.forEach(row => row.classList.add('winning-row'));
+            message.textContent = `Вітаємо, ви виграли! 🎉`;
+            generateButton.disabled = true;
+            return;
+        }
+
+        if (currentTry >= maxTries) {
+            message.textContent = `На жаль, ви програли. Спробуйте ще раз!`;
+            generateButton.disabled = true;
+        } else {
+            message.textContent = `Спроба ${currentTry} з ${maxTries}.`;
+        }
+    });
+</script>
+</body>
+</html>

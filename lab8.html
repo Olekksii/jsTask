@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гра: Користувач проти Комп'ютера</title>
+    <style>
+        body { 
+            background-image: url("5559852.jpg");
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            margin: 0;
+            padding: 20px;
+        }
+		 #back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0066cc;
+            color: #fff;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #back-button:hover {
+            background-color: #004999;
+        }
+        #score { 
+            font-size: 30px;
+            margin: 10px; 
+        }
+        .box { 
+            display: inline-block; 
+            margin: 20px; 
+            padding: 40px; 
+            border: 1px solid black; 
+            border-radius: 10px;
+            background-color: white;		
+        }
+        .generate { 
+            background-color: limegreen; 
+            color: white; 
+            padding: 10px 20px; 
+            font-size: 1em; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 5px; 
+            transition: background-color 0.3s;
+        }
+        .generate:hover {
+            background-color: darkgreen;
+        }
+        .circle { 
+            font-size: 2em; 
+            color: yellow; 
+            background-color: black; 
+            border-radius: 50%;
+            width: 80px; 
+            height: 80px; 
+            display: inline-flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin: 10px; 
+        }
+
+        @media (max-width: 600px) {
+            .box {
+                width: 80%;
+                margin: 10px auto;
+                padding: 20px;
+            }
+            .circle {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5em;
+            }
+            .generate {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+   <a id="back-button" href="index.html">Назад</a>
+    <h1>Гра: Користувач проти Комп'ютера</h1>
+    <div id="score">
+        <div id="user" class="box">
+            <h3>Користувач <span id="userScore">0</span></h3>
+            <div class="circle" id="userNumber">0</div>
+        </div>
+        <div id="computer" class="box">
+            <h3>Комп'ютер <span id="computerScore">0</span></h3>
+            <div class="circle" id="computerNumber">0</div>
+        </div>
+    </div>
+    <button id="gameButton" class="generate">Грати!</button>
+    <p id="result"></p>
+
+    <script>
+        const userName = prompt("Введіть ваше ім'я:");
+        const playerName = userName ? userName : "Гравець";
+
+        document.querySelector("h1").textContent = `Гра: ${playerName} проти Комп'ютера`;
+
+        let userScore = 0;
+        let computerScore = 0;
+						
+        function playGame() {
+            const userNumber = Math.floor(Math.random() * 10) + 1;
+            const computerNumber = Math.floor(Math.random() * 10) + 1;
+
+            document.getElementById("userNumber").textContent = userNumber;
+            document.getElementById("computerNumber").textContent = computerNumber;
+
+            if (userNumber > computerNumber) {
+                userScore++;
+                document.getElementById("result").textContent = `${playerName} виграв раунд!`;
+            } else if (computerNumber > userNumber) {
+                computerScore++;
+                document.getElementById("result").textContent = "Комп'ютер виграв раунд!";
+            } else {
+                document.getElementById("result").textContent = "Нічия!";
+            }
+
+            document.getElementById("userScore").textContent = userScore;
+            document.getElementById("computerScore").textContent = computerScore;
+
+            if (userScore === 3 || computerScore === 3) {
+                const finalScore = `${userScore}:${computerScore}`;
+                
+                if (userScore === 3) {
+                    document.getElementById("result").textContent = `${playerName} переміг гру! Загальний рахунок: ${finalScore}`;
+                } else {
+                    document.getElementById("result").textContent = `Комп'ютер переміг гру! Загальний рахунок: ${finalScore}`;
+                }
+
+                setTimeout(() => {
+                    userScore = 0;
+                    computerScore = 0;
+                    document.getElementById("userScore").textContent = userScore;
+                    document.getElementById("computerScore").textContent = computerScore;
+                    
+                    document.getElementById("result").textContent = ""; 
+                }, 3000); 
+            }
+        }
+		
+
+        document.getElementById("gameButton").addEventListener("click", playGame);
+    </script>
+</body>
+</html>

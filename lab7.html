@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Магічна куля</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #011b45;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #input-field {
+            margin-bottom: 20px;
+        }
+        #question-input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 300px;
+        }
+        #ball {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(49,176,150) 25%, rgba(252,70,198) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            position: relative;
+            cursor: pointer;
+        }
+		#back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0066cc;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        #back-button:hover {
+            background-color: #004999;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const container = document.createElement('div');
+        container.id = 'container';
+
+        const inputField = document.createElement('div');
+        inputField.id = 'input-field';
+        
+        const questionInput = document.createElement('input');
+        questionInput.id = 'question-input';
+        questionInput.type = 'text';
+        questionInput.placeholder = 'Введіть ваше питання...';
+        inputField.appendChild(questionInput);
+
+   
+
+        container.appendChild(inputField);
+
+        // Додавання магічної кулі
+        const ball = document.createElement('div');
+        ball.id = 'ball';
+        ball.innerText = '...'; // Початковий стан кулі
+        container.appendChild(ball);
+		
+		 const backButton = document.createElement('a');
+        backButton.id = 'back-button';
+        backButton.href = 'index.html'; // Посилання на попередню сторінку
+        backButton.innerText = 'Назад';
+        container.appendChild(backButton);
+        // Додавання контейнера до body
+        document.body.appendChild(container);
+
+        // Можливі відповіді магічної кулі
+        const answers = ['Так', 'Ні', 'Можливо', 'Звісно!', 'Не зараз', 'Спробуй пізніше'];
+
+        // Функція для генерації випадкової відповіді
+        const generateAnswer = () => {
+            const question = questionInput.value.trim();
+
+            if (question) {
+                const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+                ball.innerText = randomAnswer;
+            } else {
+                ball.innerText = 'Введіть питання!';
+            }
+        };
+
+
+        // Обробник події для натискання на кулю
+        ball.addEventListener('click', generateAnswer);
+    </script>
+</body>
+</html>
